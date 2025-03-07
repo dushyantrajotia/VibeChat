@@ -125,7 +125,7 @@ Dushyant Rajotia
 
 Email:  dushyantrajotia@gmail.com
 
-GitHub: your-username
+GitHub: dushyantrajotia
 
 Enjoy vibing with VibeChat! 🎉
 Let the music and conversations flow! 🎶💬
