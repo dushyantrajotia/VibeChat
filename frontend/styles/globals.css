@@ -1,0 +1,123 @@
+/* Modern Gradient Background */
+body {
+  font-family: 'Verdana', sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  overflow: auto; /* Allow scrolling if content overflows */
+}
+
+/* Glassmorphism Effect for Containers */
+.app-container {
+  display: flex;
+  flex-direction: column; /* Stack vertically on mobile */
+  width: 95%; /* Take up most of the screen on mobile */
+  max-width: 1200px; /* Limit width on larger screens */
+  height: 90vh; /* Full height on mobile */
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 20px; /* Add some margin for spacing */
+}
+
+/* Chat and Music Containers */
+.chat-container, .music-container {
+  flex: 1;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Chat Container */
+.chat-container {
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Music Container */
+.music-container {
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Add a border on mobile */
+}
+
+/* Messages Section */
+.messages {
+  height: 200px; /* Smaller height on mobile */
+  overflow-y: auto;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* Typing Indicator */
+.typing-indicator {
+  color: #00ff88;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+/* Input and Buttons */
+input, button {
+  margin-top: 10px;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1em;
+  outline: none;
+  transition: background 0.3s ease;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+input:focus {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+button {
+  background: #00ff88;
+  color: #1e3c72;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #00cc66;
+}
+
+/* YouTube Player */
+.youtube-player {
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Media Queries for Larger Screens */
+@media (min-width: 768px) {
+  .app-container {
+    flex-direction: row; /* Side-by-side on larger screens */
+    height: 80vh; /* Adjust height for desktop */
+  }
+
+  .chat-container {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: none; /* Remove top border on desktop */
+  }
+
+  .music-container {
+    border-top: none; /* Remove top border on desktop */
+  }
+
+  .messages {
+    height: 300px; /* Larger height on desktop */
+  }
+}
