@@ -10,76 +10,108 @@ export default function Home() {
   const [entered, setEntered] = useState(false);
   const [socket, setSocket] = useState(null);
 
-  // Retrieve username from localStorage if already set
+  // Load stored username
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUsername = localStorage.getItem("username");
-      if (storedUsername) {
-        setUsername(storedUsername);
-        setEntered(true);
-        console.log("Username loaded from localStorage:", storedUsername);
+    try {
+      if (typeof window !== "undefined") {
+        const storedUsername = localStorage.getItem("username");
+        if (storedUsername) {
+          setUsername(storedUsername);
+          setEntered(true);
+        }
       }
+    } catch (err) {
+      console.error("Error accessing localStorage:", err);
     }
   }, []);
 
-  // Connect socket when component mounts
+  // Connect socket
   useEffect(() => {
-    const newSocket = io("https://vibechat-q5d3.onrender.com", {
-      transports: ["websocket", "polling"],
-      reconnection: true,
-      reconnectionAttempts: 10,
-      reconnectionDelay: 3000,
-    });
+    try {
+      const newSocket = io("https://vibechat-q5d3.onrender.com", {
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionAttempts: 10,
+        reconnectionDelay: 3000,
+      });
 
-    setSocket(newSocket);
+      setSocket(newSocket);
 
-    return () => {
-      newSocket.disconnect();
-    };
+      return () => {
+        newSocket.disconnect();
+      };
+    } catch (err) {
+      console.error("Socket connection error:", err);
+    }
   }, []);
 
-  // Handle username submission
   const handleEnter = () => {
     if (username.trim()) {
-      if (typeof window !== "undefined") {
-        localStorage.setItem("username", username);
+      try {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("username", username);
+        }
+        setEntered(true);
+      } catch (err) {
+        console.error("Error setting username:", err);
       }
-      setEntered(true);
-      console.log("Username set and entered party:", username);
-    } else {
-      alert("Please enter a valid username.");
     }
   };
 
-  return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-blue-400 text-white font-['Verdana']">
-      {!entered ? (
-        <div className="text-center space-y-4">
-          <h2 className="text-2xl font-bold">Set Username</h2>
-          <input
-            type="text"
-            className="p-2 text-black rounded-md"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <button
-            onClick={handleEnter}
-            className="bg-green-500 px-4 py-2 rounded-md hover:bg-green-600 transition"
-          >
-            Enter the Party
-          </button>
-        </div>
-      ) : (
-        <div className="flex w-full h-full">
-          <div className="w-1/2 p-4 overflow-y-auto">
-            {socket && <Chat socket={socket} username={username} />}
+  // Debug: Trace if render causes crash
+  useEffect(() => {
+    console.log("Home component mounted ✅");
+  }, []);
+
+  try {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-blue-400 text-white font-['Verdana']">
+        {!entered ? (
+          <div className="text-center space-y-4">
+            <h2 className="text-2xl font-bold">Set Username</h2>
+            <input
+              type="text"
+              className="p-2 text-black rounded-md"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <button
+              onClick={handleEnter}
+              className="bg-green-500 px-4 py-2 rounded-md"
+            >
+              Enter the Party
+            </button>
           </div>
-          <div className="w-1/2 p-4 overflow-y-auto">
-            {socket && <MusicPlayer socket={socket} />}
+        ) : (
+          <div className="flex w-full h-full">
+            <div className="w-1/2 p-4">
+              {socket ? (
+                <Chat socket={socket} username={username} />
+              ) : (
+                <p>Connecting to chat...</p>
+              )}
+            </div>
+            <div className="w-1/2 p-4">
+              {socket ? (
+                <MusicPlayer socket={socket} />
+              ) : (
+                <p>Loading music player...</p>
+              )}
+            </div>
           </div>
+        )}
+      </div>
+    );
+  } catch (error) {
+    console.error("Error during render:", error);
+    return (
+      <div className="h-screen flex items-center justify-center text-center text-white bg-red-600">
+        <div>
+          <h2 className="text-2xl font-bold">🚨 Something went wrong</h2>
+          <p>Please reload the page or try again later.</p>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
 }
