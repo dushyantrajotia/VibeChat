@@ -19,7 +19,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5000", {
+    const newSocket = io("https://vibechat-q5d3.onrender.com", {
       transports: ["websocket", "polling"],
       reconnection: true,
       reconnectionAttempts: 10,
