@@ -4,7 +4,7 @@ export default function Chat({ socket, username }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [typing, setTyping] = useState(false);
-  const typingTimeout = useRef(null); // Use useRef for timeout
+  const typingTimeout = useRef(null);
 
   useEffect(() => {
     const handleReceiveMessage = (data) => {
@@ -53,7 +53,7 @@ export default function Chat({ socket, username }) {
             <span className="text-blue-600">👤 {msg.username}:</span> {msg.text}
           </p>
         ))}
-        {typing && <p className="text-sm italic">User is typing...</p>}
+        {typing && <p className="text-sm italic">Typing...</p>}
       </div>
       <div className="mt-2 flex">
         <input

@@ -1,4 +1,4 @@
-/* Modern Gradient Background */
+/* 🌈 Modern Gradient Background */
 body {
   font-family: 'Verdana', sans-serif;
   background: linear-gradient(135deg, #1e3c72, #2a5298);
@@ -8,45 +8,50 @@ body {
   justify-content: center;
   min-height: 100vh;
   margin: 0;
-  overflow: auto; /* Allow scrolling if content overflows */
+  overflow: auto;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-/* Glassmorphism Effect for Containers */
+/* 💎 Glassmorphism Container */
 .app-container {
   display: flex;
-  flex-direction: column; /* Stack vertically on mobile */
-  width: 95%; /* Take up most of the screen on mobile */
-  max-width: 1200px; /* Limit width on larger screens */
-  height: 90vh; /* Full height on mobile */
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 90vh;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  margin: 20px; /* Add some margin for spacing */
+  margin: 20px 10px;
+  box-sizing: border-box;
 }
 
-/* Chat and Music Containers */
-.chat-container, .music-container {
+/* 📱 Content Panels */
+.chat-container,
+.music-container {
   flex: 1;
   padding: 20px;
   background: rgba(255, 255, 255, 0.05);
+  box-sizing: border-box;
 }
 
-/* Chat Container */
+/* 🧾 Chat Section */
 .chat-container {
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Mobile first */
 }
 
-/* Music Container */
+/* 🎵 Music Section */
 .music-container {
-  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Add a border on mobile */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Messages Section */
+/* 💬 Messages */
 .messages {
-  height: 200px; /* Smaller height on mobile */
+  height: 180px;
   overflow-y: auto;
   padding: 10px;
   background: rgba(0, 0, 0, 0.2);
@@ -54,15 +59,16 @@ body {
   margin-bottom: 10px;
 }
 
-/* Typing Indicator */
+/* ⌨️ Typing Indicator */
 .typing-indicator {
   color: #00ff88;
   font-style: italic;
   font-size: 0.9em;
 }
 
-/* Input and Buttons */
-input, button {
+/* 🔘 Inputs & Buttons */
+input,
+button {
   margin-top: 10px;
   padding: 12px;
   width: 100%;
@@ -73,6 +79,7 @@ input, button {
   font-size: 1em;
   outline: none;
   transition: background 0.3s ease;
+  box-sizing: border-box;
 }
 
 input::placeholder {
@@ -94,30 +101,37 @@ button:hover {
   background: #00cc66;
 }
 
-/* YouTube Player */
+/* 📺 YouTube Embed */
 .youtube-player {
   margin-top: 20px;
   border-radius: 10px;
   overflow: hidden;
 }
 
-/* Media Queries for Larger Screens */
+/* 💻 Tablet & Desktop (768px+) */
 @media (min-width: 768px) {
   .app-container {
-    flex-direction: row; /* Side-by-side on larger screens */
-    height: 80vh; /* Adjust height for desktop */
+    flex-direction: row;
+    height: 80vh;
   }
 
   .chat-container {
     border-right: 1px solid rgba(255, 255, 255, 0.1);
-    border-top: none; /* Remove top border on desktop */
+    border-bottom: none;
   }
 
   .music-container {
-    border-top: none; /* Remove top border on desktop */
+    border-top: none;
   }
 
   .messages {
-    height: 300px; /* Larger height on desktop */
+    height: 300px;
+  }
+}
+
+/* 🖥️ Larger Desktops (1024px+) */
+@media (min-width: 1024px) {
+  .messages {
+    height: 400px;
   }
 }

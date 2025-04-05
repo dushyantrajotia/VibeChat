@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react"; // <-- Import hooks here
+import { useEffect, useState, useRef } from "react";
 import YouTube from "react-youtube";
 
 export default function MusicPlayer({ socket }) {
@@ -8,7 +8,7 @@ export default function MusicPlayer({ socket }) {
   const [videoId, setVideoId] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentlyPlaying, setCurrentlyPlaying] = useState("");
-  const playerRef = useRef(null); // Store YouTube player instance
+  const playerRef = useRef(null);
 
   useEffect(() => {
     if (!socket) return;
@@ -49,7 +49,7 @@ export default function MusicPlayer({ socket }) {
   const searchAndPlaySong = async () => {
     if (!songName.trim()) return;
 
-    const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY; // Use environment variable
+    const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
     const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(songName)}&key=${API_KEY}&type=video&maxResults=1`;
 
     try {
@@ -71,7 +71,7 @@ export default function MusicPlayer({ socket }) {
 
       console.log("🎶 Playing:", title, " (Video ID:", videoId, ")");
 
-      socket.emit("playSong", { id: videoId, title }); // Emit play event to sync across users
+      socket.emit("playSong", { id: videoId, title });
 
       setVideoId(videoId);
       setCurrentlyPlaying(title);
@@ -97,7 +97,7 @@ export default function MusicPlayer({ socket }) {
       playerRef.current.pauseVideo();
     }
 
-    socket.emit("togglePlayPause", newStatus); // Sync play/pause for all users
+    socket.emit("togglePlayPause", newStatus);
   };
 
   return (
@@ -116,7 +116,7 @@ export default function MusicPlayer({ socket }) {
       <YouTube
         videoId={videoId}
         opts={{
-          height: "0", // Keep it hidden
+          height: "0",
           width: "0",
           playerVars: { autoplay: 1 },
         }}
