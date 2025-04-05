@@ -10,33 +10,54 @@ export default function Home() {
   const [entered, setEntered] = useState(false);
   const [socket, setSocket] = useState(null);
 
+  // Load stored username from localStorage
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    if (storedUsername) {
-      setUsername(storedUsername);
-      setEntered(true);
+    if (typeof window !== "undefined") {
+      try {
+        const storedUsername = localStorage.getItem("username");
+        if (storedUsername) {
+          setUsername(storedUsername);
+          setEntered(true);
+        }
+      } catch (err) {
+        console.error("Error accessing localStorage:", err);
+      }
     }
   }, []);
 
+  // Connect socket only after user has entered
   useEffect(() => {
-    if (!entered) return; // only connect socket after entering
+    if (!entered) return;
 
-    const newSocket = io("https://vibechat-q5d3.onrender.com", {
-      transports: ["websocket"],
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 3000,
-    });
+    try {
+      const newSocket = io("https://vibechat-q5d3.onrender.com", {
+        transports: ["websocket"],
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 3000,
+      });
 
-    setSocket(newSocket);
+      setSocket(newSocket);
 
-    return () => newSocket.disconnect();
+      return () => {
+        newSocket.disconnect();
+      };
+    } catch (err) {
+      console.error("Socket connection error:", err);
+    }
   }, [entered]);
 
+  // Handle entering the username
   const handleEnter = () => {
     if (username.trim()) {
-      localStorage.setItem("username", username);
-      setEntered(true);
+      try {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("username", username);
+        }
+        setEntered(true);
+      } catch (err) {
+        console.error("Error saving username:", err);
+      }
     } else {
       alert("Please enter a valid username!");
     }
