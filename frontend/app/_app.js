@@ -1,5 +1,11 @@
 "use client";
-import "../styles/globals.css"; // Ensure you have global styles
+import "../styles/globals.css";
+import ErrorBoundary from "../components/ErrorBoundary";
+
 export default function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <ErrorBoundary>
+      <Component {...pageProps} />
+    </ErrorBoundary>
+  );
 }
