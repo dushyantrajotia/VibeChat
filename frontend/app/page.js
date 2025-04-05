@@ -10,18 +10,18 @@ export default function Home() {
   const [entered, setEntered] = useState(false);
   const [socket, setSocket] = useState(null);
 
-  // On first load, check localStorage
+  // Load username from localStorage on first load
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedUsername = localStorage.getItem("username");
-      if (storedUsername) {
+      if (storedUsername && storedUsername.trim()) {
         setUsername(storedUsername);
         setEntered(true);
       }
     }
   }, []);
 
-  // Connect socket only after entering
+  // Connect to socket only after entering
   useEffect(() => {
     if (!entered) return;
 
@@ -42,9 +42,9 @@ export default function Home() {
   const handleEnter = () => {
     if (username.trim()) {
       if (typeof window !== "undefined") {
-        localStorage.setItem("username", username);
+        localStorage.setItem("username", username.trim());
       }
-      setEntered(true); // this now correctly updates state and triggers socket useEffect
+      setEntered(true); // triggers socket connection and UI change
     } else {
       alert("Please enter a valid username!");
     }
