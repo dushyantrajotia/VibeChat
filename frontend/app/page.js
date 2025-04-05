@@ -1,3 +1,109 @@
+  "use client";
+
+  import { useState, useEffect } from "react";
+  import Chat from "../components/Chat";
+  import MusicPlayer from "../components/MusicPlayer";
+  import io from "socket.io-client";
+
+  export default function Home() {
+    const [username, setUsername] = useState("");
+    const [entered, setEntered] = useState(false);
+    const [socket, setSocket] = useState(null);
+
+    // Load stored username from localStorage
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        try {
+          const storedUsername = localStorage.getItem("username");
+          if (storedUsername) {
+            setUsername(storedUsername);
+            setEntered(true);
+          }
+        } catch (err) {
+          console.error("Error accessing localStorage:", err);
+        }
+      }
+    }, []);
+
+    // Connect socket only after user has entered
+    useEffect(() => {
+      if (!entered) return;
+
+      try {
+        const newSocket = io("https://vibechat-q5d3.onrender.com", {
+          transports: ["websocket"],
+          reconnection: true,
+          reconnectionAttempts: 5,
+          reconnectionDelay: 3000,
+        });
+
+        setSocket(newSocket);
+
+        return () => {
+          newSocket.disconnect();
+        };
+      } catch (err) {
+        console.error("Socket connection error:", err);
+      }
+    }, [entered]);
+
+    // Handle entering the username
+    const handleEnter = () => {
+      if (username.trim()) {
+        try {
+          if (typeof window !== "undefined") {
+            localStorage.setItem("username", username);
+          }
+          setEntered(true);
+        } catch (err) {
+          console.error("Error saving username:", err);
+        }
+      } else {
+        alert("Please enter a valid username!");
+      }
+    };
+
+    return (
+      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-blue-400 text-white font-['Verdana']">
+        {!entered ? (
+          <div className="text-center space-y-4 bg-white p-6 rounded-lg text-black">
+            <h2 className="text-2xl font-bold">🎉 Enter the VibeChat Party</h2>
+            <input
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="p-2 rounded-md border border-gray-300 w-64 text-black"
+            />
+            <br />
+            <button
+              onClick={handleEnter}
+              className="mt-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+            >
+              Enter the Party
+            </button>
+          </div>
+        ) : (
+          <div className="flex w-full h-full">
+            <div className="w-1/2 p-4">
+              {socket ? (
+                <Chat socket={socket} username={username} />
+              ) : (
+                <p>Connecting to chat...</p>
+              )}
+            </div>
+            <div className="w-1/2 p-4">
+              {socket ? (
+                <MusicPlayer socket={socket} />
+              ) : (
+                <p>Loading music player...</p>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 "use client";
 
 import { useState, useEffect } from "react";
@@ -10,54 +116,41 @@ export default function Home() {
   const [entered, setEntered] = useState(false);
   const [socket, setSocket] = useState(null);
 
-  // Load stored username from localStorage
+  // On first load, check localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
-      try {
-        const storedUsername = localStorage.getItem("username");
-        if (storedUsername) {
-          setUsername(storedUsername);
-          setEntered(true);
-        }
-      } catch (err) {
-        console.error("Error accessing localStorage:", err);
+      const storedUsername = localStorage.getItem("username");
+      if (storedUsername) {
+        setUsername(storedUsername);
+        setEntered(true);
       }
     }
   }, []);
 
-  // Connect socket only after user has entered
+  // Connect socket only after entering
   useEffect(() => {
     if (!entered) return;
 
-    try {
-      const newSocket = io("https://vibechat-q5d3.onrender.com", {
-        transports: ["websocket"],
-        reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 3000,
-      });
+    const newSocket = io("https://vibechat-q5d3.onrender.com", {
+      transports: ["websocket"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 3000,
+    });
 
-      setSocket(newSocket);
+    setSocket(newSocket);
 
-      return () => {
-        newSocket.disconnect();
-      };
-    } catch (err) {
-      console.error("Socket connection error:", err);
-    }
+    return () => {
+      newSocket.disconnect();
+    };
   }, [entered]);
 
-  // Handle entering the username
   const handleEnter = () => {
     if (username.trim()) {
-      try {
-        if (typeof window !== "undefined") {
-          localStorage.setItem("username", username);
-        }
-        setEntered(true);
-      } catch (err) {
-        console.error("Error saving username:", err);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("username", username);
       }
+      setEntered(true); // this now correctly updates state and triggers socket useEffect
     } else {
       alert("Please enter a valid username!");
     }
