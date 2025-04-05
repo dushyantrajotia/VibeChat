@@ -1,52 +1,69 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Chat from "../components/Chat";
-import MusicPlayer from "../components/MusicPlayer";
+import dynamic from "next/dynamic";
 import io from "socket.io-client";
+
+// Dynamically import to avoid SSR hydration issues
+const Chat = dynamic(() => import("../components/Chat"), { ssr: false });
+const MusicPlayer = dynamic(() => import("../components/MusicPlayer"), { ssr: false });
 
 export default function Home() {
   const [username, setUsername] = useState("");
   const [entered, setEntered] = useState(false);
   const [socket, setSocket] = useState(null);
 
-  // Load username from localStorage on first load
+  // ✅ Load stored username (with try/catch)
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUsername = localStorage.getItem("username");
-      if (storedUsername && storedUsername.trim()) {
-        setUsername(storedUsername);
-        setEntered(true);
+    try {
+      if (typeof window !== "undefined") {
+        const storedUsername = localStorage.getItem("username");
+        if (storedUsername && storedUsername.trim()) {
+          setUsername(storedUsername);
+          setEntered(true);
+        }
       }
+    } catch (err) {
+      console.error("Error accessing localStorage:", err);
     }
   }, []);
 
-  // Connect to socket only after entering
+  // ✅ Connect socket after user enters
   useEffect(() => {
-    if (!entered) return;
+    if (!entered || socket) return;
 
-    const newSocket = io("https://vibechat-q5d3.onrender.com", {
-      transports: ["websocket"],
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 3000,
-    });
+    try {
+      const newSocket = io("https://vibechat-q5d3.onrender.com", {
+        transports: ["websocket"],
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 3000,
+      });
 
-    setSocket(newSocket);
+      setSocket(newSocket);
 
-    return () => {
-      newSocket.disconnect();
-    };
+      return () => {
+        newSocket.disconnect();
+      };
+    } catch (err) {
+      console.error("Socket connection error:", err);
+    }
   }, [entered]);
 
+  // ✅ Handle Enter click
   const handleEnter = () => {
-    if (username.trim()) {
+    if (!username.trim()) {
+      alert("Please enter a valid username!");
+      return;
+    }
+
+    try {
       if (typeof window !== "undefined") {
         localStorage.setItem("username", username.trim());
       }
-      setEntered(true); // triggers socket connection and UI change
-    } else {
-      alert("Please enter a valid username!");
+      setEntered(true);
+    } catch (err) {
+      console.error("Error saving username:", err);
     }
   };
 
