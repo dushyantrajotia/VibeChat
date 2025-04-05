@@ -10,108 +10,76 @@ export default function Home() {
   const [entered, setEntered] = useState(false);
   const [socket, setSocket] = useState(null);
 
-  // Load stored username
   useEffect(() => {
-    try {
-      if (typeof window !== "undefined") {
-        const storedUsername = localStorage.getItem("username");
-        if (storedUsername) {
-          setUsername(storedUsername);
-          setEntered(true);
-        }
-      }
-    } catch (err) {
-      console.error("Error accessing localStorage:", err);
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+      setEntered(true);
     }
   }, []);
 
-  // Connect socket
   useEffect(() => {
-    try {
-      const newSocket = io("https://vibechat-q5d3.onrender.com", {
-        transports: ["websocket", "polling"],
-        reconnection: true,
-        reconnectionAttempts: 10,
-        reconnectionDelay: 3000,
-      });
+    if (!entered) return; // only connect socket after entering
 
-      setSocket(newSocket);
+    const newSocket = io("https://vibechat-q5d3.onrender.com", {
+      transports: ["websocket"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 3000,
+    });
 
-      return () => {
-        newSocket.disconnect();
-      };
-    } catch (err) {
-      console.error("Socket connection error:", err);
-    }
-  }, []);
+    setSocket(newSocket);
+
+    return () => newSocket.disconnect();
+  }, [entered]);
 
   const handleEnter = () => {
     if (username.trim()) {
-      try {
-        if (typeof window !== "undefined") {
-          localStorage.setItem("username", username);
-        }
-        setEntered(true);
-      } catch (err) {
-        console.error("Error setting username:", err);
-      }
+      localStorage.setItem("username", username);
+      setEntered(true);
+    } else {
+      alert("Please enter a valid username!");
     }
   };
 
-  // Debug: Trace if render causes crash
-  useEffect(() => {
-    console.log("Home component mounted ✅");
-  }, []);
-
-  try {
-    return (
-      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-blue-400 text-white font-['Verdana']">
-        {!entered ? (
-          <div className="text-center space-y-4">
-            <h2 className="text-2xl font-bold">Set Username</h2>
-            <input
-              type="text"
-              className="p-2 text-black rounded-md"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <button
-              onClick={handleEnter}
-              className="bg-green-500 px-4 py-2 rounded-md"
-            >
-              Enter the Party
-            </button>
-          </div>
-        ) : (
-          <div className="flex w-full h-full">
-            <div className="w-1/2 p-4">
-              {socket ? (
-                <Chat socket={socket} username={username} />
-              ) : (
-                <p>Connecting to chat...</p>
-              )}
-            </div>
-            <div className="w-1/2 p-4">
-              {socket ? (
-                <MusicPlayer socket={socket} />
-              ) : (
-                <p>Loading music player...</p>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  } catch (error) {
-    console.error("Error during render:", error);
-    return (
-      <div className="h-screen flex items-center justify-center text-center text-white bg-red-600">
-        <div>
-          <h2 className="text-2xl font-bold">🚨 Something went wrong</h2>
-          <p>Please reload the page or try again later.</p>
+  return (
+    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-blue-400 text-white font-['Verdana']">
+      {!entered ? (
+        <div className="text-center space-y-4 bg-white p-6 rounded-lg text-black">
+          <h2 className="text-2xl font-bold">🎉 Enter the VibeChat Party</h2>
+          <input
+            type="text"
+            placeholder="Enter your username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="p-2 rounded-md border border-gray-300 w-64 text-black"
+          />
+          <br />
+          <button
+            onClick={handleEnter}
+            className="mt-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+          >
+            Enter the Party
+          </button>
         </div>
-      </div>
-    );
-  }
+      ) : (
+        <div className="flex w-full h-full">
+          <div className="w-1/2 p-4">
+            {socket ? (
+              <Chat socket={socket} username={username} />
+            ) : (
+              <p>Connecting to chat...</p>
+            )}
+          </div>
+          <div className="w-1/2 p-4">
+            {socket ? (
+              <MusicPlayer socket={socket} />
+            ) : (
+              <p>Loading music player...</p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
