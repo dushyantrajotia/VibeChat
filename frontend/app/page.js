@@ -24,7 +24,7 @@ export default function Home() {
     } catch (err) {
       console.error("Error accessing localStorage:", err);
     }
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     if (!entered || socket) return;

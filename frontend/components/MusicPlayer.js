@@ -72,7 +72,7 @@ export default function MusicPlayer({ socket }) {
       if (playerRef.current) {
         playerRef.current.loadVideoById(videoId);
       }
-    } catch (error) {
+    } catch {
       alert("Error fetching video. Check logs.");
     }
   };
@@ -117,7 +117,7 @@ export default function MusicPlayer({ socket }) {
         onEnd={() => {
           setIsPlaying(false);
         }}
-        onError={(event) => {
+        onError={() => {
           alert("Error playing song. Try another one.");
         }}
       />
