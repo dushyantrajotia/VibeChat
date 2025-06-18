@@ -14,19 +14,16 @@ export default function MusicPlayer({ socket }) {
     if (!socket) return;
 
     const handlePlaySong = ({ id, title }) => {
-      console.log("🎵 Received playSong event:", { id, title });
       setVideoId(id);
       setCurrentlyPlaying(title);
       setIsPlaying(true);
 
       if (playerRef.current) {
-        console.log("🔄 Loading new video:", id);
         playerRef.current.loadVideoById(id);
       }
     };
 
     const handleTogglePlayPause = (status) => {
-      console.log("⏯ Received togglePlayPause event:", status);
       setIsPlaying(status);
       if (playerRef.current) {
         if (status) {
@@ -53,14 +50,11 @@ export default function MusicPlayer({ socket }) {
     const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(songName)}&key=${API_KEY}&type=video&maxResults=1`;
 
     try {
-      console.log("🔍 Fetching from YouTube API:", searchUrl);
       const response = await fetch(searchUrl);
       const data = await response.json();
 
-      console.log("📦 API Response:", data);
 
       if (!data.items || data.items.length === 0) {
-        console.error("🚫 No results found for:", songName);
         alert("No results found. Try another song.");
         return;
       }
@@ -68,8 +62,6 @@ export default function MusicPlayer({ socket }) {
       const firstVideo = data.items[0];
       const videoId = firstVideo.id.videoId;
       const title = firstVideo.snippet.title;
-
-      console.log("🎶 Playing:", title, " (Video ID:", videoId, ")");
 
       socket.emit("playSong", { id: videoId, title });
 
@@ -81,8 +73,7 @@ export default function MusicPlayer({ socket }) {
         playerRef.current.loadVideoById(videoId);
       }
     } catch (error) {
-      console.error("❌ Error fetching video:", error);
-      alert("Error fetching video. Check console logs.");
+      alert("Error fetching video. Check logs.");
     }
   };
 
@@ -102,7 +93,7 @@ export default function MusicPlayer({ socket }) {
 
   return (
     <div className="h-full flex flex-col items-center">
-      <h2 className="text-xl font-bold">Music Player</h2>
+      <h2 className="text-xl font-bold">🎧 Chill Zone</h2>
       <input
         className="border p-2 mt-4 w-64 text-black"
         placeholder="Enter song name..."
@@ -110,9 +101,9 @@ export default function MusicPlayer({ socket }) {
         onChange={(e) => setSongName(e.target.value)}
       />
       <button className="bg-green-500 text-white px-4 py-2 mt-2 rounded-md" onClick={searchAndPlaySong}>
-        Search & Play
+        ▶ 
       </button>
-      {currentlyPlaying && <p className="mt-2 text-lg">🎵 Now Playing: {currentlyPlaying}</p>}
+      {currentlyPlaying && <p className="mt-2 text-lg">🎵 Playing: {currentlyPlaying}</p>}
       <YouTube
         videoId={videoId}
         opts={{
@@ -121,21 +112,18 @@ export default function MusicPlayer({ socket }) {
           playerVars: { autoplay: 1 },
         }}
         onReady={(event) => {
-          console.log("✅ YouTube Player is ready.");
           playerRef.current = event.target;
         }}
         onEnd={() => {
-          console.log("⏹ Song ended.");
           setIsPlaying(false);
         }}
         onError={(event) => {
-          console.error("⚠️ YouTube Player Error:", event.data);
           alert("Error playing song. Try another one.");
         }}
       />
       {videoId && (
         <button className="bg-gray-700 text-white px-4 py-2 mt-2 rounded-md" onClick={togglePlayPause}>
-          {isPlaying ? "Pause" : "Play"}
+          {isPlaying ? "⏸" : "⏯"}
         </button>
       )}
     </div>

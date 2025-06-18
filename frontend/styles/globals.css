@@ -1,7 +1,6 @@
-/* 🌈 Modern Gradient Background */
 body {
-  font-family: 'Verdana', sans-serif;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  background: linear-gradient(135deg, #A802F2, #BA01EE);
   color: white;
   display: flex;
   align-items: center;
@@ -13,7 +12,6 @@ body {
   box-sizing: border-box;
 }
 
-/* 💎 Glassmorphism Container */
 .app-container {
   display: flex;
   flex-direction: column;
@@ -30,7 +28,6 @@ body {
   box-sizing: border-box;
 }
 
-/* 📱 Content Panels */
 .chat-container,
 .music-container {
   flex: 1;
@@ -39,17 +36,14 @@ body {
   box-sizing: border-box;
 }
 
-/* 🧾 Chat Section */
 .chat-container {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Mobile first */
 }
 
-/* 🎵 Music Section */
 .music-container {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* 💬 Messages */
 .messages {
   height: 180px;
   overflow-y: auto;
@@ -59,14 +53,12 @@ body {
   margin-bottom: 10px;
 }
 
-/* ⌨️ Typing Indicator */
 .typing-indicator {
   color: #00ff88;
   font-style: italic;
   font-size: 0.9em;
 }
 
-/* 🔘 Inputs & Buttons */
 input,
 button {
   margin-top: 10px;
@@ -78,7 +70,6 @@ button {
   color: white;
   font-size: 1em;
   outline: none;
-  transition: background 0.3s ease;
   box-sizing: border-box;
 }
 
@@ -101,14 +92,12 @@ button:hover {
   background: #00cc66;
 }
 
-/* 📺 YouTube Embed */
 .youtube-player {
   margin-top: 20px;
   border-radius: 10px;
   overflow: hidden;
 }
 
-/* 💻 Tablet & Desktop (768px+) */
 @media (min-width: 768px) {
   .app-container {
     flex-direction: row;
@@ -129,7 +118,6 @@ button:hover {
   }
 }
 
-/* 🖥️ Larger Desktops (1024px+) */
 @media (min-width: 1024px) {
   .messages {
     height: 400px;

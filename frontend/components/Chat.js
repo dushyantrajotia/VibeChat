@@ -46,20 +46,20 @@ export default function Chat({ socket, username }) {
 
   return (
     <div className="h-full flex flex-col">
-      <h2 className="text-xl font-bold">Chat</h2>
+      <h2 className="text-xl font-bold">💬 Say Anything</h2>
       <div className="flex-1 overflow-y-auto bg-white text-black p-4 rounded-md">
         {messages.map((msg, index) => (
           <p key={index} className="p-2">
-            <span className="text-blue-600">👤 {msg.username}:</span> {msg.text}
+            <span className="text-blue-600">👨 {msg.username} said </span> {msg.text}
           </p>
         ))}
-        {typing && <p className="text-sm italic">Typing...</p>}
+        {typing && <p className="text-sm italic">...</p>}
       </div>
       <div className="mt-2 flex">
         <input
           type="text"
           className="p-2 text-black flex-grow rounded-md"
-          placeholder="Type a message..."
+          placeholder="Message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleTyping}
@@ -68,7 +68,7 @@ export default function Chat({ socket, username }) {
           onClick={sendMessage}
           className="bg-blue-500 px-4 py-2 rounded-md"
         >
-          Send
+         ↪
         </button>
       </div>
     </div>

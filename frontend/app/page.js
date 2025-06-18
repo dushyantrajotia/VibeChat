@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import io from "socket.io-client";
 
-// Dynamically import to avoid SSR hydration issues
 const Chat = dynamic(() => import("../components/Chat"), { ssr: false });
 const MusicPlayer = dynamic(() => import("../components/MusicPlayer"), { ssr: false });
 
@@ -13,7 +12,6 @@ export default function Home() {
   const [entered, setEntered] = useState(false);
   const [socket, setSocket] = useState(null);
 
-  // ✅ Load stored username (with try/catch)
   useEffect(() => {
     try {
       if (typeof window !== "undefined") {
@@ -28,7 +26,6 @@ export default function Home() {
     }
   }, []);
 
-  // ✅ Connect socket after user enters
   useEffect(() => {
     if (!entered || socket) return;
 
@@ -50,7 +47,6 @@ export default function Home() {
     }
   }, [entered]);
 
-  // ✅ Handle Enter click
   const handleEnter = () => {
     if (!username.trim()) {
       alert("Please enter a valid username!");
@@ -71,7 +67,7 @@ export default function Home() {
     <div className="h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-blue-400 text-white font-['Verdana']">
       {!entered ? (
         <div className="text-center space-y-4 bg-white p-6 rounded-lg text-black">
-          <h2 className="text-2xl font-bold">🎉 Enter the VibeChat Party</h2>
+          <h2 className="text-2xl font-bold">🎉 Enter the Party</h2>
           <input
             type="text"
             placeholder="Enter your username"
